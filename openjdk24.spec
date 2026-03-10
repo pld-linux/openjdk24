@@ -7,6 +7,10 @@
 %define		use_jdk	openjdk24
 %endif
 
+%ifarch x32
+%define		with_zero	1
+%endif
+
 %ifarch %{ix86} %{x8664} aarch64
 %define		with_shenandoahgc	1
 %endif
@@ -30,6 +34,7 @@ Source0:	https://github.com/openjdk/jdk24u/archive/jdk-%{version}-ga/%{name}-%{v
 Source10:	make-cacerts.sh
 Patch0:		no_optflags.patch
 Patch1:		no_optflags_vardeps.patch
+Patch2:		x32.patch
 URL:		http://openjdk.java.net/
 BuildRequires:	/usr/bin/jar
 BuildRequires:	alsa-lib-devel
@@ -343,6 +348,7 @@ Przykłady dla OpenJDK.
 # Rename uabs to g_uabs to avoid conflict with glibc uabs (GCC 15+)
 find src/hotspot -name "*.hpp" -o -name "*.cpp" | xargs %{__sed} -i 's/\buabs\b/g_uabs/g'
 %patch -P1 -p1
+%patch -P2 -p1
 
 %build
 # Make sure we have /proc mounted - otherwise idlc will fail later.

@@ -1,0 +1,38 @@
+--- a/make/autoconf/platform.m4.orig	2024-01-01 00:00:00.000000000 +0100
++++ b/make/autoconf/platform.m4	2024-01-01 00:00:00.000000000 +0100
+@@ -30,17 +30,19 @@
+ [
+   # First argument is the cpu name from the trip/quad
+   case "$1" in
+-    x86_64*x32)
+-      VAR_CPU=x32
+-      VAR_CPU_ARCH=x86
+-      VAR_CPU_BITS=32
+-      VAR_CPU_ENDIAN=little
+-      ;;
+     x86_64)
+       VAR_CPU=x86_64
+       VAR_CPU_ARCH=x86
+       VAR_CPU_BITS=64
+       VAR_CPU_ENDIAN=little
++      case "$host" in
++        *x32)
++          VAR_CPU=x32
++          VAR_CPU_ARCH=x86
++          VAR_CPU_BITS=32
++          VAR_CPU_ENDIAN=little
++          ;;
++      esac
+       ;;
+     i?86)
+       VAR_CPU=x86
+--- a/src/java.base/share/classes/jdk/internal/util/Architecture.java.orig	2024-01-01 00:00:00.000000000 +0100
++++ b/src/java.base/share/classes/jdk/internal/util/Architecture.java	2024-01-01 00:00:00.000000000 +0100
+@@ -55,6 +55,7 @@
+     SPARCV9(64, ByteOrder.BIG_ENDIAN),
+     X86(32, ByteOrder.LITTLE_ENDIAN),
+     X64(64, ByteOrder.LITTLE_ENDIAN),  // Represents AMD64 and X86_64
++    X32(32, ByteOrder.LITTLE_ENDIAN),
+     ;
+
+     private final int addrSize;
