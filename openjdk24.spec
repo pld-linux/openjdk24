@@ -583,8 +583,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{dstdir}/lib/%{jvm_type}/*.so
 %if 1
 %{dstdir}/lib/%{jvm_type}/classes.jsa
-%{dstdir}/lib/%{jvm_type}/classes_coh.jsa
 %ifarch aarch64 %{x8664}
+%{dstdir}/lib/%{jvm_type}/classes_coh.jsa
 %{dstdir}/lib/%{jvm_type}/classes_nocoops.jsa
 %{dstdir}/lib/%{jvm_type}/classes_nocoops_coh.jsa
 %endif
