@@ -26,7 +26,7 @@ Summary:	Open-source implementation of the Java Platform, Standard Edition
 Summary(pl.UTF-8):	Wolnoźródłowa implementacja Java 24 SE
 Name:		openjdk24
 Version:	24.0.2
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Development/Languages/Java
 Source0:	https://github.com/openjdk/jdk24u/archive/jdk-%{version}-ga/%{name}-%{version}.tar.gz
@@ -372,6 +372,7 @@ chmod a+x configure
 
 # disable-debug-symbols so openjdk debuginfo handling won't conflict with ours
 %configure \
+	--enable-deprecated-ports=yes \
 	--with-jvm-variants=%{jvm_type} \
 	--with-boot-jdk="%{java_home}" \
 	--with-extra-cflags="%{rpmcppflags} %{rpmcflags}" \
