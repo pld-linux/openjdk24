@@ -1,5 +1,7 @@
-%bcond_with	bootstrap	# build a bootstrap version, using icedtea6
-%bcond_without	cacerts		# don't include the default CA certificates
+#
+# Conditional build:
+%bcond_with	bootstrap	# bootstrap version, using openjdk23
+%bcond_without	cacerts		# default CA certificates packaging
 
 %if %{with bootstrap}
 %define		use_jdk	openjdk23
@@ -55,6 +57,8 @@ BuildRequires:	lcms2-devel >= 2.11
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 2:1.6.37
 BuildRequires:	lsb-release
+# recommended >= 2.19.2
+BuildRequires:	pandoc >= 2.9
 BuildRequires:	pcsc-lite-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
