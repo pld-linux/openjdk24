@@ -174,6 +174,7 @@ Group:		Development/Languages/Java
 Requires:	%{name}-jre-base = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.7.5-12
 Requires:	lcms2 >= 2.11
+Recommends:	%{name}-jdk = %{version}-%{release}
 Provides:	jdk(%{name})
 
 %description jdk-base
