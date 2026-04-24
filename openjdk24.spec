@@ -258,7 +258,7 @@ Requires:	%{name}-jre-base-freetype = %{version}-%{release}
 Requires:	giflib >= 5.2.1
 Requires:	libpng >= 2:1.6.37
 Provides:	jre-X11 = %{version}
-Provides:	jre-base-X11 = %{version}
+Provides:	jre-X11(%{name})
 
 %description jre-base-X11
 X11 support for OpenJDK runtime environment built using free software
