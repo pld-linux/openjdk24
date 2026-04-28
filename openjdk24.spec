@@ -77,7 +77,7 @@ BuildRequires:	xorg-proto-printproto-devel
 BuildRequires:	xorg-proto-xproto-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel
-Requires:	%{name}-jdk = %{version}-%{release}
+Requires:	%{name}-default-jdk = %{version}-%{release}
 Suggests:	icedtea-web
 Obsoletes:	icedtea6
 Obsoletes:	icedtea7
@@ -134,13 +134,13 @@ To jest meta-pakiet, który, za pośrednictwem zależności, dostarcza
 wszystkie komponenty OpenJDK, w tym środowisko programistyczne
 (OpenJDK) i uruchomieniowe (JRE).
 
-%package jdk
+%package default-jdk
 Summary:	OpenJDK - software development kit
 Summary(pl.UTF-8):	OpenJDK - środowisko programistyczne
 Group:		Development/Languages/Java
-Requires:	%{name}-jar = %{version}-%{release}
-Requires:	%{name}-jdk-base = %{version}-%{release}
-Requires:	%{name}-jre = %{version}-%{release}
+Requires:	%{name}-default-jar = %{version}-%{release}
+Requires:	%{name}-default-jre = %{version}-%{release}
+Requires:	%{name}-jdk = %{version}-%{release}
 Provides:	j2sdk = %{version}
 Provides:	jdk = %{version}
 Obsoletes:	blackdown-java-sdk
@@ -154,40 +154,42 @@ Obsoletes:	java-sun
 Obsoletes:	java5-sun
 Obsoletes:	jdk
 Obsoletes:	kaffe
+Obsoletes:	openjdk24-jdk < 24.0.2-3
 Obsoletes:	oracle-java7
 
-%description jdk
+%description default-jdk
 This package symlinks OpenJDK development tools provided by
-%{name}-jdk-base to system-wide directories like %{_bindir}, making
+%{name}-jdk to system-wide directories like %{_bindir}, making
 OpenJDK the default JDK.
 
-%description jdk -l pl.UTF-8
+%description default-jdk -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do narzędzi programistycznych
-OpenJDK, dostarczanych przez pakiet %{name}-jdk-base, w standardowych
+OpenJDK, dostarczanych przez pakiet %{name}-jdk w standardowych
 systemowych ścieżkach takich jak %{_bindir}, sprawiając tym samym, że
 OpenJDK staje się domyślnym JDK w systemie.
 
-%package jdk-base
+%package jdk
 Summary:	OpenJDK - software development kit
 Summary(pl.UTF-8):	Kod OpenJDK - środowisko programistyczne
 Group:		Development/Languages/Java
-Requires:	%{name}-jre-base = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
 Requires:	jpackage-utils >= 0:1.7.5-12
 Requires:	lcms2 >= 2.11
-Recommends:	%{name}-jdk = %{version}-%{release}
+Recommends:	%{name}-default-jdk = %{version}-%{release}
 Provides:	jdk(%{name})
+Obsoletes:	openjdk24-jdk-base < 24.0.2-3
 
-%description jdk-base
+%description jdk
 OpenJDK development tools built using free software only.
 
-%description jdk-base -l pl.UTF-8
+%description jdk -l pl.UTF-8
 OpenJDK skompilowane wyłącznie przy użyciu wolnego oprogramowania.
 
-%package jre
+%package default-jre
 Summary:	OpenJDK - runtime environment
 Summary(pl.UTF-8):	OpenJDK - środowisko uruchomieniowe
 Group:		Development/Languages/Java
-Requires:	%{name}-jre-base = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
 Provides:	java
 Provides:	java1.4
 Provides:	jre = %{version}
@@ -207,20 +209,21 @@ Obsoletes:	jmx
 Obsoletes:	jndi
 Obsoletes:	jre
 Obsoletes:	jsse
+Obsoletes:	openjdk24-jre < 24.0.2-3
 Obsoletes:	oracle-java7-jre
 
-%description jre
+%description default-jre
 This package symlinks OpenJDK runtime environment tools provided by
-%{name}-jre-base to system-wide directories like %{_bindir}, making
+%{name}-jre to system-wide directories like %{_bindir}, making
 OpenJDK the default JRE.
 
-%description jre -l pl.UTF-8
+%description default-jre -l pl.UTF-8
 Ten pakiet tworzy symboliczne dowiązania do środowiska
-uruchomieniowego OpenJDK, dostarczanych przez pakiet %{name}-jre-base,
+uruchomieniowego OpenJDK, dostarczanych przez pakiet %{name}-jre
 w standardowych systemowych ścieżkach takich jak %{_bindir},
 sprawiając tym samym, że OpenJDK staje się domyślnym JRE w systemie.
 
-%package jre-base
+%package jre
 Summary:	OpenJDK - runtime environment
 Summary(pl.UTF-8):	OpenJDK - środowisko uruchomieniowe
 Group:		Development/Languages/Java
@@ -228,7 +231,7 @@ Requires:	jpackage-utils >= 0:1.7.5-12
 Requires:	nss >= 1:3.13.4
 # Require zoneinfo data provided by java-tzdata subpackage.
 Requires:	java-tzdata
-Recommends:	%{name}-jre = %{version}-%{release}
+Recommends:	%{name}-default-jre = %{version}-%{release}
 Provides:	java(ClassDataVersion) = %{_classdataversion}
 Provides:	java(jaas) = %{version}
 Provides:	java(jaf) = 1.1.1
@@ -241,46 +244,49 @@ Provides:	java(jmx) = 1.4
 Provides:	java(jndi) = %{version}
 Provides:	java(jsse) = %{version}
 Provides:	jre(%{name})
+Obsoletes:	openjdk24-jre-base < 24.0.2-3
 
-%description jre-base
+%description jre
 OpenJDK runtime environment built using free software only.
 
-%description jre-base -l pl.UTF-8
+%description jre -l pl.UTF-8
 Środowisko uruchomieniowe OpenJDK zbudowany wyłącznie przy użyciu
 wolnego oprogramowania.
 
-%package jre-base-X11
+%package jre-X11
 Summary:	OpenJDK - runtime environment - X11 support
 Summary(pl.UTF-8):	OpenJDK - środowisko uruchomieniowe - obsługa X11
 Group:		Development/Languages/Java
-Requires:	%{name}-jre-base = %{version}-%{release}
-Requires:	%{name}-jre-base-freetype = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
+Requires:	%{name}-jre-freetype = %{version}-%{release}
 Requires:	giflib >= 5.2.1
 Requires:	libpng >= 2:1.6.37
 Provides:	jre-X11 = %{version}
 Provides:	jre-X11(%{name})
+Obsoletes:	openjdk24-jre-base-X11 < 24.0.2-3
 
-%description jre-base-X11
+%description jre-X11
 X11 support for OpenJDK runtime environment built using free software
 only.
 
-%description jre-base-X11 -l pl.UTF-8
+%description jre-X11 -l pl.UTF-8
 Biblioteki X11 dla środowiska OpenJDK zbudowany wyłocznie przy uzyciu
 wolnego oprogramowania.
 
-%package jre-base-freetype
+%package jre-freetype
 Summary:	OpenJDK - runtime environment - font support
 Summary(pl.UTF-8):	OpenJDK - środowisko uruchomieniowe - obsługa fontów
 Group:		Development/Languages/Java
-Requires:	%{name}-jre-base = %{version}-%{release}
+Requires:	%{name}-jre = %{version}-%{release}
 Requires:	freetype >= 1:2.10.2
 Requires:	harfbuzz >= 2.3.1
+Obsoletes:	openjdk24-jre-base-freetype < 24.0.2-3
 
-%description jre-base-freetype
+%description jre-freetype
 Font handling library for OpenJDK runtime environment built using free
 software only.
 
-%description jre-base-freetype -l pl.UTF-8
+%description jre-freetype -l pl.UTF-8
 Biblioteki obsługi czcionek dla OpenJDK zbudowane wyłącznie przy
 użyciu wolnego oprogramowania.
 
@@ -296,24 +302,25 @@ JMods for OpenJDK.
 %description jmods -l pl.UTF-8
 JMods dla OpenJDK.
 
-%package jar
+%package default-jar
 Summary:	OpenJDK - JAR tool
 Summary(pl.UTF-8):	OpenJDK - narzędzie JAR
 Group:		Development/Languages/Java
-Requires:	%{name}-jdk-base = %{version}-%{release}
+Requires:	%{name}-jdk = %{version}-%{release}
 Provides:	jar
 Obsoletes:	fastjar
 Obsoletes:	icedtea6-jar
 Obsoletes:	icedtea7-jar
 Obsoletes:	icedtea8-jar
 Obsoletes:	jar
+Obsoletes:	openjdk24-jar < 24.0.2-3
 
-%description jar
+%description default-jar
 JAR tool from OpenJDK built using free software only.
 
 JAR is an archiver used to merge Java classes into a single library.
 
-%description jar -l pl.UTF-8
+%description default-jar -l pl.UTF-8
 Narzędzie jar z OpenJDK zbudowane przy uzyciu wyłącznie wolnego
 oprogramowania.
 
@@ -470,7 +477,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 
-%files jdk
+%files default-jdk
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/jarsigner
 %attr(755,root,root) %{_bindir}/javac
@@ -521,7 +528,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jwebserver.1*
 %{_mandir}/man1/serialver.1*
 
-%files jdk-base
+%files jdk
 %defattr(644,root,root,755)
 %dir %{dstdir}
 %{_jvmdir}/%{name}
@@ -553,7 +560,7 @@ rm -rf $RPM_BUILD_ROOT
 %{dstdir}/include
 %{dstdir}/lib/ct.sym
 
-%files jre
+%files default-jre
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/java
 %attr(755,root,root) %{_bindir}/jfr
@@ -566,7 +573,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/rmiregistry.1*
 
-%files jre-base
+%files jre
 %defattr(644,root,root,755)
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/*
@@ -641,13 +648,13 @@ rm -rf $RPM_BUILD_ROOT
 %{dstdir}/lib/tzdb.dat
 %{jvmjardir}
 
-%files jre-base-X11
+%files jre-X11
 %defattr(644,root,root,755)
 %attr(755,root,root) %{dstdir}/lib/libsplashscreen.so
 %attr(755,root,root) %{dstdir}/lib/libawt_xawt.so
 %attr(755,root,root) %{dstdir}/lib/libjawt.so
 
-%files jre-base-freetype
+%files jre-freetype
 %defattr(644,root,root,755)
 %attr(755,root,root) %{dstdir}/lib/libfontmanager.so
 
@@ -655,7 +662,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{dstdir}/jmods
 
-%files jar
+%files default-jar
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/jar
 %{_mandir}/man1/jar.1*
