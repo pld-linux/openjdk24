@@ -38,7 +38,6 @@ Patch0:		no_optflags.patch
 Patch1:		no_optflags_vardeps.patch
 Patch2:		x32.patch
 URL:		http://openjdk.java.net/
-BuildRequires:	/usr/bin/jar
 BuildRequires:	alsa-lib-devel
 BuildRequires:	ant
 BuildRequires:	autoconf
