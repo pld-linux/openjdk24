@@ -37,6 +37,7 @@ Source10:	make-cacerts.sh
 Patch0:		no_optflags.patch
 Patch1:		no_optflags_vardeps.patch
 Patch2:		x32.patch
+Patch3:		glibc-2.42.patch
 URL:		http://openjdk.java.net/
 BuildRequires:	alsa-lib-devel
 BuildRequires:	ant
@@ -356,11 +357,9 @@ Przykłady dla OpenJDK.
 %setup -qn jdk24u-jdk-%{version}-ga
 
 %patch -P0 -p1
-
-# Rename uabs to g_uabs to avoid conflict with glibc uabs (GCC 15+)
-find src/hotspot -name "*.hpp" -o -name "*.cpp" | xargs %{__sed} -i 's/\buabs\b/g_uabs/g'
 %patch -P1 -p1
 %patch -P2 -p1
+%patch -P3 -p1
 
 %build
 # Make sure we have /proc mounted - otherwise idlc will fail later.

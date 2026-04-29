@@ -1,0 +1,104 @@
+--- jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/macroAssembler_aarch64.cpp.orig	2021-06-08 14:25:01.000000000 +0200
++++ jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/macroAssembler_aarch64.cpp	2026-04-30 19:38:04.818399119 +0200
+@@ -2282,7 +2282,7 @@
+   if (fits) {
+     (this->*insn1)(Rd, Rn, imm);
+   } else {
+-    if (uabs(imm) < (1 << 24)) {
++    if (g_uabs(imm) < (1 << 24)) {
+        (this->*insn1)(Rd, Rn, imm & -(1 << 12));
+        (this->*insn1)(Rd, Rd, imm & ((1 << 12)-1));
+     } else {
+--- jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/assembler_aarch64.cpp.orig	2021-06-08 14:25:01.000000000 +0200
++++ jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/assembler_aarch64.cpp	2026-04-30 19:39:01.893947477 +0200
+@@ -280,7 +280,7 @@
+ 
+ bool asm_util::operand_valid_for_immediate_bits(int64_t imm, unsigned nbits) {
+   guarantee(nbits == 8 || nbits == 12, "invalid nbits value");
+-  uint64_t uimm = (uint64_t)uabs((jlong)imm);
++  uint64_t uimm = (uint64_t)g_uabs((jlong)imm);
+   if (uimm < (UCONST64(1) << nbits))
+     return true;
+   if (uimm < (UCONST64(1) << (2 * nbits))
+--- jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/assembler_aarch64.hpp.orig	2021-06-08 14:25:01.000000000 +0200
++++ jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/assembler_aarch64.hpp	2026-04-30 19:39:24.053513295 +0200
+@@ -889,7 +889,7 @@
+   static const uint64_t branch_range = NOT_DEBUG(128 * M) DEBUG_ONLY(2 * M);
+ 
+   static bool reachable_from_branch_at(address branch, address target) {
+-    return uabs(target - branch) < branch_range;
++    return g_uabs(target - branch) < branch_range;
+   }
+ 
+   // Unconditional branch (immediate)
+--- jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/stubGenerator_aarch64.cpp.orig	2021-06-08 14:25:01.000000000 +0200
++++ jdk16u-jdk-16.0.2-ga/src/hotspot/cpu/aarch64/stubGenerator_aarch64.cpp	2026-04-30 19:39:30.843380258 +0200
+@@ -1037,7 +1037,7 @@
+ 
+   void copy_memory_small(DecoratorSet decorators, BasicType type, Register s, Register d, Register count, int step) {
+     bool is_backwards = step < 0;
+-    size_t granularity = uabs(step);
++    size_t granularity = g_uabs(step);
+     int direction = is_backwards ? -1 : 1;
+ 
+     Label Lword, Lint, Lshort, Lbyte;
+@@ -1093,7 +1093,7 @@
+                    Register s, Register d, Register count, int step) {
+     copy_direction direction = step < 0 ? copy_backwards : copy_forwards;
+     bool is_backwards = step < 0;
+-    unsigned int granularity = uabs(step);
++    unsigned int granularity = g_uabs(step);
+     const Register t0 = r3, t1 = r4;
+ 
+     // <= 80 (or 96 for SIMD) bytes do inline. Direction doesn't matter because we always
+--- jdk16u-jdk-16.0.2-ga/src/hotspot/share/utilities/globalDefinitions.hpp.orig	2021-06-08 14:25:01.000000000 +0200
++++ jdk16u-jdk-16.0.2-ga/src/hotspot/share/utilities/globalDefinitions.hpp	2026-04-30 19:39:35.343292089 +0200
+@@ -1100,7 +1100,7 @@
+ 
+ // abs methods which cannot overflow and so are well-defined across
+ // the entire domain of integer types.
+-static inline unsigned int uabs(unsigned int n) {
++static inline unsigned int g_uabs(unsigned int n) {
+   union {
+     unsigned int result;
+     int value;
+@@ -1109,7 +1109,7 @@
+   if (value < 0) result = 0-result;
+   return result;
+ }
+-static inline julong uabs(julong n) {
++static inline julong g_uabs(julong n) {
+   union {
+     julong result;
+     jlong value;
+@@ -1118,8 +1118,8 @@
+   if (value < 0) result = 0-result;
+   return result;
+ }
+-static inline julong uabs(jlong n) { return uabs((julong)n); }
+-static inline unsigned int uabs(int n) { return uabs((unsigned int)n); }
++static inline julong g_uabs(jlong n) { return g_uabs((julong)n); }
++static inline unsigned int g_uabs(int n) { return g_uabs((unsigned int)n); }
+ 
+ // "to" should be greater than "from."
+ inline size_t byte_size(void* from, void* to) {
+--- jdk16u-jdk-16.0.2-ga/src/hotspot/share/opto/mulnode.cpp.orig	2021-06-08 14:25:01.000000000 +0200
++++ jdk16u-jdk-16.0.2-ga/src/hotspot/share/opto/mulnode.cpp	2026-04-30 19:39:42.299822454 +0200
+@@ -192,7 +192,7 @@
+   // Check for negative constant; if so negate the final result
+   bool sign_flip = false;
+ 
+-  unsigned int abs_con = uabs(con);
++  unsigned int abs_con = g_uabs(con);
+   if (abs_con != (unsigned int)con) {
+     sign_flip = true;
+   }
+@@ -288,7 +288,7 @@
+ 
+   // Check for negative constant; if so negate the final result
+   bool sign_flip = false;
+-  julong abs_con = uabs(con);
++  julong abs_con = g_uabs(con);
+   if (abs_con != (julong)con) {
+     sign_flip = true;
+   }
