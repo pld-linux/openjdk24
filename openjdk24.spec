@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_with	bootstrap	# bootstrap version, using openjdk23
 %bcond_without	cacerts		# default CA certificates packaging
+%bcond_without	pandoc		# man pages (pandoc required)
 
 %if %{with bootstrap}
 %define		use_jdk	openjdk23
@@ -58,7 +59,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel >= 2:1.6.37
 BuildRequires:	lsb-release
 # recommended >= 2.19.2
-BuildRequires:	pandoc >= 2.9
+%{?with_pandoc:BuildRequires:	pandoc >= 2.9}
 BuildRequires:	pcsc-lite-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
@@ -449,9 +450,11 @@ ln -s %{dstreldir} $RPM_BUILD_ROOT%{_jvmdir}/java
 mv $RPM_BUILD_ROOT%{dstdir}/demo $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 mv $RPM_BUILD_ROOT%{dstdir}/lib/src.zip $RPM_BUILD_ROOT%{_javasrcdir}/%{name}-jdk.zip
 
+%if %{with pandoc}
 # move manual pages to its place
 mv $RPM_BUILD_ROOT%{dstdir}/man/man1 $RPM_BUILD_ROOT%{_mandir}/man1
 rmdir $RPM_BUILD_ROOT%{dstdir}/man
+%endif
 
 # replace duplicates with symlinks, link to %{_bindir}
 for path in $RPM_BUILD_ROOT%{dstdir}/bin/*; do
@@ -502,6 +505,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jwebserver
 %attr(755,root,root) %{_bindir}/serialver
 %{_jvmdir}/java
+%if %{with pandoc}
 %{_mandir}/man1/jarsigner.1*
 %{_mandir}/man1/javac.1*
 %{_mandir}/man1/javadoc.1*
@@ -525,6 +529,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jstatd.1*
 %{_mandir}/man1/jwebserver.1*
 %{_mandir}/man1/serialver.1*
+%endif
 
 %files jdk
 %defattr(644,root,root,755)
@@ -565,11 +570,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jrunscript
 %attr(755,root,root) %{_bindir}/keytool
 %attr(755,root,root) %{_bindir}/rmiregistry
+%if %{with pandoc}
 %{_mandir}/man1/java.1*
 %{_mandir}/man1/jfr.1*
 %{_mandir}/man1/jrunscript.1*
 %{_mandir}/man1/keytool.1*
 %{_mandir}/man1/rmiregistry.1*
+%endif
 
 %files jre
 %defattr(644,root,root,755)
@@ -663,7 +670,7 @@ rm -rf $RPM_BUILD_ROOT
 %files default-jar
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/jar
-%{_mandir}/man1/jar.1*
+%{?with_pandoc:%{_mandir}/man1/jar.1*}
 
 %files jdk-sources
 %defattr(644,root,root,755)
