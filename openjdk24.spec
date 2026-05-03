@@ -62,7 +62,7 @@ BuildRequires:	lsb-release
 BuildRequires:	pcsc-lite-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.007
 BuildRequires:	unzip
 BuildRequires:	util-linux
 BuildRequires:	xorg-lib-libX11-devel
@@ -598,15 +598,15 @@ rm -rf $RPM_BUILD_ROOT
 %{dstdir}/lib/security
 %dir %{dstdir}/lib/%{jvm_type}
 %attr(755,root,root) %{dstdir}/lib/%{jvm_type}/*.so
-%if 1
 %{dstdir}/lib/%{jvm_type}/classes.jsa
-%ifarch aarch64 %{x8664}
-%{dstdir}/lib/%{jvm_type}/classes_coh.jsa
+%ifarch %{arch64}
 %{dstdir}/lib/%{jvm_type}/classes_nocoops.jsa
+%ifarch %{x8664} aarch64 ppc64 ppc64le riscv64 s390x
+%{dstdir}/lib/%{jvm_type}/classes_coh.jsa
 %{dstdir}/lib/%{jvm_type}/classes_nocoops_coh.jsa
 %endif
-%{dstdir}/lib/classlist
 %endif
+%{dstdir}/lib/classlist
 %{dstdir}/lib/jrt-fs.jar
 %{dstdir}/lib/jvm.cfg
 %attr(755,root,root) %{dstdir}/lib/libattach.so
@@ -614,6 +614,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{dstdir}/lib/libawt_headless.so
 %attr(755,root,root) %{dstdir}/lib/libdt_socket.so
 %attr(755,root,root) %{dstdir}/lib/libextnet.so
+%{?with_zero:%attr(755,root,root) %{dstdir}/lib/libfallbackLinker.so}
 %attr(755,root,root) %{dstdir}/lib/libinstrument.so
 %attr(755,root,root) %{dstdir}/lib/libj2gss.so
 %attr(755,root,root) %{dstdir}/lib/libj2pcsc.so
